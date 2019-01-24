@@ -1,45 +1,55 @@
 package display;
 
 import java.awt.Color;
-import java.awt.Image;
 
 public class Tile {
 
-	String biome;
-	Landmark landmark;
-	Image landmarkImage;
+	String type;
 	int x,y;
 	Color color;
 	
-	public Tile(String biome, int x, int y) {
-		this.biome = biome;
+	public Tile(String type, int x, int y) {
+		this.type = type;
 		this.x = x;
 		this.y = y;
+		setColor();
 	}
 
-	public String getBiome() {
+	public String getType() {
 		
 		
-		return biome;
+		return type;
 	}
 
-	public void setLandmark(Landmark set) {
+	public void setColor() {
 		
-		landmark = set;		
+		switch(type) {
+			case "noType":
+				color = Color.red;
+				break;
+			case "forest":
+					color = Color.green;
+					break;
+			case "sea":
+					color = Color.blue;
+					break;
+			case "desert":
+					color = Color.yellow;
+					break;
+			
+		}
 		
+		
+		this.color= color;
 	}
 
-	public Landmark getLandmark() {
-		return landmark;
+	public Color getColor() {
+		return color;
 	}
 	
-	public Image getLandmarkImage() {
-				
-		return landmarkImage;
-	}
 	
-	public void setBiome(String biome) {
-		this.biome = biome;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public int getX() {

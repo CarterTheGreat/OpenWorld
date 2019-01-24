@@ -3,34 +3,23 @@ package display;
 import java.awt.Color;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel; 
+import javax.swing.JLabel; 
 
 public class Frame extends JFrame{
 
-	public static Frame window;
+	static Frame window;
 	final JLabel label = new JLabel("Random Number Fractal");
 	
-	static int frameX = 1005;
-	static int frameY = 1030;
+	static int frameX = 500;
+	static int frameY = 500;
 	
-	public static Build build;
-	public static JPanel mainPanel;
-	public static MapPanel mapPanel;
+	private MapPanel mapPanel;
 	
 	public Frame() {
 		super();
 		
-		
-		mainPanel = new JPanel();
-		mainPanel.setSize(frameX-5,frameY-30);
-		add(mainPanel);
-		build = new Build();
 		mapPanel = new MapPanel();
-		mainPanel.add(mapPanel);
-		//build = new Build();
-		//mapPanel = new MapPanel();
-		//add(mapPanel);
+		add(mapPanel);
 		
 		setSize(frameX,frameY);
 		setResizable(false);
@@ -42,7 +31,6 @@ public class Frame extends JFrame{
 	public static void main(String[] args) {
 		
 		window = new Frame();
-		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    window.setVisible(true);
 	    window.setTitle("Tile Map");

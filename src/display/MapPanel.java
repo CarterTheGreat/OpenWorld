@@ -4,120 +4,157 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-
-import player.Player;
 
 public class MapPanel extends JPanel{
 
 	
-	static int panelX = Frame.frameX-5;
-	static int panelY = Frame.frameY-30;
+	static int panelX = Frame.frameX;
+	static int panelY = Frame.frameY;
 	
 	//Width of tiles
-	static int width = 10;
-	static int height = 10;
+	static int width = 5;
+	static int height = 5;
+	//Tile images
+	BufferedImage forest;
 	
-	Build build = Frame.build;
-	Player player  = Build.player;
+   
 	
 	Font font = new Font("Times New Roman", Font.BOLD, 26);
+	int leaderCount = 5;
 	
-	Tile[][] tiles = Build.tiles;
-	
-	InputMap im;
-	ActionMap am;
+	ArrayList<Tile> leaders = new ArrayList<Tile>();
+	Tile[][] tiles = new Tile[panelX/width][panelY/height];
 	
 	public MapPanel() {
-		
-			System.out.println("Map panel building");
 			
+	
+			System.out.println("Map panel building");
 			setPreferredSize(new Dimension(panelX,panelY));
 		    setVisible(true);
 		    removeAll();
-		    setKeys();
+		    
+		    getImages();
+		    buildMap();
 		    
 		    System.out.println("Map panel built");
 				
 	}
-
-	void setKeys(){
-
-		im = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0 , false),  "up");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0 , false),  "down");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0 , false),  "left");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0 , false),  "right");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0 , false),  "enterLandmark");
-		
-		ActionMap am = this.getActionMap();
-		am.put("up",new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				player.move("up");
-			}
-		});
-		am.put("down",new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				player.move("down");
-			}
-		});
-		am.put("left",new AbstractAction() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						player.move("left");
-					}
-				});
-		am.put("right",new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				player.move("right");
-			}
-		});
-		am.put("enterLandmark",new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(tiles[player.getX()][player.getY()].getLandmark().getType() != "none") {
-					build.buildLandmarkPanel(tiles[player.getX()][player.getY()].getLandmark().getType());
-					player.enterLandmark(tiles[player.getX()][player.getY()].getLandmark().getType());
-				}	
-			}
-		});
-		
-	}
 	
-//PROCESS--------------------------------------------------------------------------------------------------------------------------------------------------------------
-	
-//-----------------------------------------------------------------------------
-	    @Override
-	    public void update(Graphics g) {
-	    	process();
-	    	repaint();
+	 void  getImages() {
+	       try {                
+	          forest = ImageIO.read(new File("/src/forest.png"));
+	       } catch (IOException ex) {
+	            System.out.println("Images could not be imported");
+	       }
 	    }
-//--------------------- -------------------------------------------------------    
-	void process() {
+	 
+	void buildMap() {
+		
+		System.out.println("build map");
+		
+		buildCenters();
+		
+		for(int i = 0; i < panelX/height; i++) {
+    		for(int j = 0; j< panelY/width; j++) {
+    			
+    			String type = closestCenter(i*width,j*height);
+    			//System.out.println(type);
+    			tiles[i][j] = new Tile(type,i,j);
+    			
+    		}	
+		}
+	}
+	
+	
+	int rand(int low,int high) {
+		int r = (int )(Math.random() * high + low); 
+		return r;
+	}
+	String randType() {
+		int r = (int )(Math.random() *3); 
+		
+		System.out.println("type: "+r);
+		
+		switch(r){
+			case 0:
+				return "sea";
+			case 1:
+				return "forest";
+			case 2:
+				return "desert";
+			default:
+				return "noType";
+		}
+	}
+	
+	void buildCenters() {
+		
+		System.out.println("build centers");
+			
+			for(int i = 0; i<rand(5,leaderCount);i++ ) {
+				leaders.add(new Tile(randType(), rand(0,panelX), rand(0,panelX)));
+			}
+			leaders.add(new Tile("sea", rand(0,panelX), rand(0,panelX)));
+			leaders.add(new Tile("forest", rand(0,panelX), rand(0,panelX)));
+			leaders.add(new Tile("desert", rand(0,panelX), rand(0,panelX)));
+	}
+		
+	String closestCenter(int x, int y) {
+		  
+		//System.out.println("closest centers");
+		int dist;
+		int distMin = 999999999;
+		String type = "noType";
+		
+		for(int i = 0; i< leaders.size();i++) {
+			dist = (int) Math.sqrt((y - leaders.get(i).getY()) * (y - leaders.get(i).getY()) + (x - leaders.get(i).getX()) * (x - leaders.get(i).getX()));
+			
+			if(distMin > dist) {
+				distMin = dist;
+				type = leaders.get(i).getType();
+				
+			}
+		}
+		//System.out.println(type);
+		return type;
 		
 	}
 	
-//DRAW--------------------------------------------------------------------------------------------------------------------------------------------------------------	
+	
+	
+	void buildLandmarks(){
+		//Should i add another biome? A planes biome? Should ground textures be build befor landmarks? yeah probably
+		
+		
+		//build landmarks on tiles here
+		//Different tiles more and less likely to have landmarks 
+		//Landmark types are different between different biomes
+		
+		//Ports on land tiles bordering ocean
+		
+	}
+	
+//RUNNING---------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 //---------------------------------------------------------------------------
+    @Override
+    public void update(Graphics g) {
+    	repaint();
+    }
+    
+//---------------------------------------------------------------------------
     public void repaint() {
-       super.repaint();
+    	
+    	//this doesn't need to repeat unless there is input
+    	
+    	
+       // super.repaint();
     }	
 
 //---------------------------------------------------------------------------
@@ -128,25 +165,18 @@ public class MapPanel extends JPanel{
     	for(int i = 0; i < panelX/height; i++) {
     		for(int j = 0; j< panelY/width; j++) {
     			
-    			g.drawImage(tiles[i][j].getLandmark().getImage(),i*width, j*height ,width,height,this);
+    			g.setColor(tiles[i][j] .getColor());
+    			g.fillRect(i*width, j*height ,height,width);
     			
     		}
     	}
     	
-    	g.drawImage(player.getImage(),player.getX()*width, player.getY()*height,width,height,this);
-    	
-    	
-    	/*/Draw Leaders as black dots
     	for(int i = 0; i< leaders.size();i++) {
     		g.setColor(Color.black);
     		g.fillRect(leaders.get(i).getX(),leaders.get(i).getY(),5, 5);
     	}
-    	*/
     	
-    	//g.setColor(Color.BLACK);   	
-    	//g.fillRect(990,990,10,10);
-    	
-    	
+    	   	
         update(g);
     }
 	
