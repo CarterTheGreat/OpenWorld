@@ -12,11 +12,11 @@ public class Frame extends JFrame{
 	final JLabel label = new JLabel("Random Number Fractal");
 	
 	static int frameX = 1005;
-	static int frameY = 1030;
+	static int frameY = 1025;
 	
 	public static Build build;
 	public static JPanel mainPanel;
-	public static MapPanel mapPanel;
+	//public static MapPanel mapPanel;
 	
 	public Frame() {
 		super();
@@ -26,8 +26,7 @@ public class Frame extends JFrame{
 		mainPanel.setSize(frameX-5,frameY-30);
 		add(mainPanel);
 		build = new Build();
-		mapPanel = new MapPanel();
-		mainPanel.add(mapPanel);
+		PanelControl.buildMapPanel();
 		//build = new Build();
 		//mapPanel = new MapPanel();
 		//add(mapPanel);

@@ -15,32 +15,36 @@ import display.Tile;
 public class Player {
 	
 	String name;
+	int strength, speed, vitality;
 	
-	int health;
-	int healthMax;
+	public int damage;
 	
-	int water;
-	int waterMax;
+	public int health;
+	public int healthMax;
+	
+	public int water = 25;
+	public int waterMax = 25;
+
+	int gold;
 	
 	int x;
 	int y;
 	
-	int damage;
 	
-	int gold;
-	
-	//Inter file stuff
+	//file stuff
 	static File playerImageF = new File("Tiles/png/playerImage.png");
 	static BufferedImage playerImage;
 	String undoMove;
-	boolean hasBoat = true;
+	boolean hasBoat = false;
 	Tile[][] tiles = Build.tiles;
 	
-	public Player(String name, int x, int y) {
+	public Player(String name, int x, int y, int strength, int speed, int vitality) {
 		this.name = name;
 		this.x = x;
 		this.y = y;		
-		
+		this.strength = strength;
+		this.speed = speed;
+		this.vitality = vitality;
 		setImage();
 		
 	}
@@ -48,6 +52,8 @@ public class Player {
 	public Action move(String direction) {
 		
 		//Up, Down, Left, Right
+		
+		System.out.println("Moving");
 		
 		switch(direction) {
 			case "up":
@@ -79,14 +85,20 @@ public class Player {
 	
 	public void checkMove() {
 		
-		System.out.println("Current biome: "+ tiles[x][y].getBiome());
-		System.out.println("Current landmark: "+ tiles[x][y].getLandmark().getType());
-		System.out.println("---");
+		//System.out.println("Current biome: "+ tiles[x][y].getBiome());
+		//System.out.println("Current landmark: "+ tiles[x][y].getLandmark().getType());
+		//System.out.println("---");
 		boolean move;
+			if(water == 0) {
+				health -= 10;
+			}
 		
-			if(!hasBoat & tiles[x][y].getBiome() == "sea") {
+			if((!hasBoat & tiles[x][y].getBiome() == "sea")) {
 				move = false;
-			}else move = true;
+			}else {
+				move = true;
+				water--;
+			}
 				
 			if(!move) {
 				move(undoMove);
@@ -106,7 +118,11 @@ public class Player {
 		
 	}
 	
-	
+	void calculateStats() {
+		//TODO: add weapon equip in inventory
+		//damage = strength*weapon.getDamage();
+		healthMax = vitality*5;
+	}
 	
 	
 	
@@ -148,6 +164,17 @@ public class Player {
 
 	public void setWater(int water) {
 		this.water = water;
+	}
+	
+	public void fillWater() {
+		this.water = waterMax;
+	}
+	
+	public void changeWater(int change) {
+		this.water = water+change;
+		if(water > waterMax) {
+			this.water = waterMax;
+		}
 	}
 
 	public int getWaterMax() {

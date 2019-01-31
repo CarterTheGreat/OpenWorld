@@ -24,7 +24,7 @@ public class MapPanel extends JPanel{
 
 	
 	static int panelX = Frame.frameX-5;
-	static int panelY = Frame.frameY-30;
+	static int panelY = Frame.frameY-25;
 	
 	//Width of tiles
 	static int width = 10;
@@ -39,6 +39,12 @@ public class MapPanel extends JPanel{
 	
 	InputMap im;
 	ActionMap am;
+	
+	final static String UP = "up";
+	final static String DOWN = "down";
+	final static String LEFT = "left";
+	final static String RIGHT = "right";
+	final static String ENTER = "enter";
 	
 	public MapPanel() {
 		
@@ -57,42 +63,42 @@ public class MapPanel extends JPanel{
 
 		im = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0 , false),  "up");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0 , false),  "down");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0 , false),  "left");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0 , false),  "right");
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0 , false),  "enterLandmark");
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0 , false),  UP);
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0 , false),  DOWN);
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0 , false),  LEFT);
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0 , false),  RIGHT);
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0 , false),  ENTER);
 		
 		ActionMap am = this.getActionMap();
-		am.put("up",new AbstractAction() {
+		am.put(UP,new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				player.move("up");
 			}
 		});
-		am.put("down",new AbstractAction() {
+		am.put(DOWN,new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				player.move("down");
 			}
 		});
-		am.put("left",new AbstractAction() {
+		am.put(LEFT,new AbstractAction() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						player.move("left");
 					}
 				});
-		am.put("right",new AbstractAction() {
+		am.put(RIGHT,new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				player.move("right");
 			}
 		});
-		am.put("enterLandmark",new AbstractAction() {
+		am.put(ENTER,new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(tiles[player.getX()][player.getY()].getLandmark().getType() != "none") {
-					build.buildLandmarkPanel(tiles[player.getX()][player.getY()].getLandmark().getType());
+					PanelControl.buildLandmarkPanel(tiles[player.getX()][player.getY()].getLandmark().getType());
 					player.enterLandmark(tiles[player.getX()][player.getY()].getLandmark().getType());
 				}	
 			}

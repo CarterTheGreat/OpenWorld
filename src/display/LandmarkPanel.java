@@ -27,6 +27,8 @@ public class LandmarkPanel extends JPanel {
 	Build build = Frame.build;
 	Player player = Build.player;
 	
+	final static String EXIT  = "exit";
+	
 	public LandmarkPanel(String type) {
 		this.type = type;
 		setPreferredSize(new Dimension(panelX,panelY));
@@ -34,33 +36,35 @@ public class LandmarkPanel extends JPanel {
 		removeAll();
 		setKeys();
 		
+		player.fillWater();
 		
-		System.out.println("Focus Owner: "+isFocusOwner());
 	}
 	
 	void setKeys(){
 
-		System.out.println("Set keys");
-		im = this.getInputMap(JComponent.WHEN_FOCUSED);
-		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0 , false),  "leave");
+		System.out.println("Landmark Set keys");
+		
+		im = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0 , false), EXIT);
 		
 		ActionMap am = this.getActionMap();
-		am.put("leave",new AbstractAction() {
+		am.put(EXIT,new AbstractAction() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("action performed");
-				build.buildMapPanel();
+				PanelControl.buildMapPanel();
 				player.leaveLandmark();
 			} 	 
 		});
+		
+		
 	}
 	
 //----------------------------------------------------------------------------
 	 @Override
 	    public void update(Graphics g) {
 	    	
-		 System.out.println("update");
 		 
 	    }
 //---------------------------------------------------------------------------
@@ -70,7 +74,7 @@ public class LandmarkPanel extends JPanel {
 
 //---------------------------------------------------------------------------
     public void paintComponent(Graphics g) {
-    	g.setColor(Color.white);
+    	g.setColor(Color.black);
     	g.fillRect(0, 0, panelX, panelY);
     	
     	System.out.println("Painting landmark");

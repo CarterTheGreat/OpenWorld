@@ -10,8 +10,7 @@ public class Build {
 
 	Frame window = Frame.window;
 	static JPanel mainPanel = Frame.mainPanel;
-	static MapPanel mapPanel = new MapPanel();
-			//Frame.mapPanel;
+	//Frame.mapPanel;
 	
 	//Map
 	static int panelX = MapPanel.panelX;
@@ -27,7 +26,7 @@ public class Build {
 	
 	//Landmark
 
-	LandmarkPanel landmarkPanel;
+	//LandmarkPanel landmarkPanel;
 	
 	//Player
 	
@@ -229,35 +228,10 @@ public class Build {
 	//Player 
 		void buildPlayer() {
 			
-			player = new Player("Carter", rand(0,panelX/width),rand(0,panelY/height));
+			player = new Player("Carter", rand(0,panelX/width),rand(0,panelY/height), 3,3,3);
 			
 			
 		}
 	
-	//Panels
-		void buildMapPanel() {
-			System.out.println("Buildng map panel");
-			
-			 mainPanel.removeAll();
-			 System.out.println("Removed all");
-             mainPanel.add(mapPanel);
-             System.out.println("Added map");
-             mainPanel.revalidate();
-             mainPanel.repaint();
-			
-		}
-		
-		public void buildLandmarkPanel(String type) {
-			
-			landmarkPanel = new  LandmarkPanel(type);
-			
-			System.out.println("Build new panel");
-			mainPanel.removeAll();
-            mainPanel.add(landmarkPanel);
-            mainPanel.revalidate();
-            mainPanel.repaint();
-            System.out.println("Repainting");
-			
-			
-		}
+	
 }
